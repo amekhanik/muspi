@@ -10,7 +10,7 @@ RATE = 44100
 maxAmp = 2 ** 31 - 1.0
 gain = 30000000
 FLANGER = False
-
+r = 44444
 p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt32,
                 channels=2,
@@ -102,192 +102,62 @@ class Note:
 
 class Chord:
     """Creates Chord object that takes head Note object and adds appropriate notes based on c_type parameter."""
-    chord_types = {
-        'maj': [0, 4, 7],
-        'maj6': [0, 4, 7, 9],
-        'majadd9': [0, 4, 7, 9, 14],
-        'add9': [0, 4, 7, 14],
-        'add11': [0, 4, 7,],
-        'maj': [0, 4, 7,],
-        'maj': [0, 4, 7,],
-        'maj': [0, 4, 7,],
-        'maj': [0, 4, 7,],
-        'maj': [],
-        'maj': [],
-    }
 
     def __init__(self, head_note, c_type):
         self.head_note = head_note
         self.type = c_type
-        self.chord_notes = []
-        if self.type is 'maj':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-        elif self.type is 'maj6':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 9)
-        elif self.type is 'maj6add9':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 9)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'add9':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'add11':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 17)
-        elif self.type is 'maj7':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 11)
-        elif self.type is 'maj9':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 11)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'maj11':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 11)
-            self.chord_notes.append(self.head_note + 17)
-        elif self.type is 'maj13':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 11)
-            self.chord_notes.append(self.head_note + 21)
-        elif self.type is 'majb5':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 6)
-        elif self.type is 'maj7s11':
-            # print 1
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 11)
-            self.chord_notes.append(self.head_note + 18)
-        elif self.type is 'sus4':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 5)
-            self.chord_notes.append(self.head_note + 7)
-        elif self.type is 'sus2':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 2)
-            self.chord_notes.append(self.head_note + 7)
-        elif self.type is '9sus4':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 5)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 11)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'min':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-        elif self.type is 'min6':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 9)
-        elif self.type is 'min6add9':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 9)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'minadd9':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'min7':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 10)
-        elif self.type is 'min7b5':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 6)
-            self.chord_notes.append(self.head_note + 10)
-        elif self.type is 'min9':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 10)
-            self.chord_notes.append(self.head_note + 14)
-        elif self.type is 'min11':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 10)
-            self.chord_notes.append(self.head_note + 17)
-        elif self.type is 'min13':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 10)
-            self.chord_notes.append(self.head_note + 21)
-        elif self.type is 'dim':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 6)
-        elif self.type is 'dim4':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 6)
-        elif self.type is 'dim7':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 6)
-            self.chord_notes.append(self.head_note + 10)
-        elif self.type is 'dimmaj':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 6)
-        elif self.type is 'aug':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 8)
-        elif self.type is 'aug4':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 5)
-            self.chord_notes.append(self.head_note + 8)
-        elif self.type is 'augmin':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 3)
-            self.chord_notes.append(self.head_note + 8)
-        elif self.type is '5':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 12)
-        elif self.type is '4':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 5)
-        elif self.type is '7':
-            self.chord_notes.append(self.head_note)
-            self.chord_notes.append(self.head_note + 4)
-            self.chord_notes.append(self.head_note + 7)
-            self.chord_notes.append(self.head_note + 10)
-        elif self.type is 'note':
-            self.chord_notes.append(self.head_note)
-        elif self.type is 'silence':
+        self.chords = self.get_chord_dict()
+
+        assert self.type in self.chords.keys(), 'Invalid chord: %s' % self.type
+        
+        if self.type is 'silence':
             self.chord_notes = []
         else:
-            print('invalid chord')
+            self.chord_notes = [self.head_note]
+            chord = self.chords[c_type]
+            for c in chord:
+                self.chord_notes.append(self.head_note + c)
+    
+    def get_chord_dict(self):
+        """Return dict of chords"""
+        chords = {
+            'maj': [4, 7],
+            'maj6': [4, 7, 9],
+            'maj6add9': [4, 7, 9, 14],
+            'add9': [4, 7, 14],
+            'add11': [4, 7, 17],
+            'maj7': [4, 7, 11],
+            'maj9': [4, 7, 11, 14],
+            'maj11': [4, 7, 11, 17],
+            'maj13': [4, 7, 11, 21],
+            'majb5': [4, 6],
+            'maj7s11': [4, 7, 11, 18],
+            'sus4': [5, 7],
+            'sus2': [2, 7],
+            '9sus4': [5, 7, 11, 14],
+            'min': [3, 7],
+            'min6': [3, 7, 9],
+            'min6add9': [3, 7, 9, 14],
+            'minadd9': [3, 7, 14],
+            'min7': [3, 7, 10],
+            'min7b5': [3, 6, 10],
+            'min9': [3, 7, 10, 14],
+            'min11': [3, 7, 10, 17],
+            'min13': [3, 7, 10, 21],
+            'dim': [3, 6],
+            'dim4': [4, 6],
+            'dim7': [3, 6, 10], # same as min7b5?
+            'dimmaj': [4, 6], # same as dim4?
+            'aug': [4, 8],
+            'aug4': [5, 8],
+            'augmin': [3, 8],
+            '5': [7, 12],
+            '4': [5],
+            '7': [4, 7, 10],
+            'note': [],
+            'silence': []
+        }
+        return chords
 
     # noinspection PyUnusedLocal
     def play_chord(self, note_type=0.25, effect_list=[], tempo=200):
